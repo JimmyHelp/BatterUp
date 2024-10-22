@@ -28,6 +28,8 @@ batterUp:addChainedSwings(chained,"right","wooden_sword","attack",true,20)
 
 ## Chained Swings
 
+Chained swings will play in the order they're inserted into the table
+
 The `addChainedSwings` function has 6 arguments
 
 1. The table containing the animations, it must have 2 or more animations in it
@@ -38,6 +40,8 @@ The `addChainedSwings` function has 6 arguments
 6. A number in ticks, determines how long it should wait before resetting the chain, by default it won't reset the chain
 
 ## Randomized Swings
+
+A random animation will be picked out of the table in order to be played, it will never repeat the same animation twice
 
 The `addRandomSwings` function has 5 arguments
 

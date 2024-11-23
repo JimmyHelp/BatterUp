@@ -1,5 +1,5 @@
 -- Made by JimmyHelp
--- V1
+-- V2
 
 local batterUp = {}
 
@@ -21,11 +21,25 @@ local function getSwing(arm)
 end
 
 local function getItem(itemid,handy)
-    if not itemid then return true end
+    if #itemid == 0 then return true end
     if handy == "right" then
-        return player:getHeldItem(player:isLeftHanded()).id:find(itemid) or player:getHeldItem(player:isLeftHanded()):getName():find(itemid)
+        local getRight = player:getHeldItem(player:isLeftHanded())
+        for key, item in pairs(itemid) do
+            if getRight.id:find(item) or getRight:getName():find(item) then
+                return true
+            end
+        end
+        return false
     elseif handy == "left" then
-        return player:getHeldItem(not player:isLeftHanded()).id:find(itemid) or player:getHeldItem(not player:isLeftHanded()):getName():find(itemid)
+        local getLeft = player:getHeldItem(not player:isLeftHanded())
+        for key, item in pairs(itemid) do
+            if getLeft.id:find(item) or getLeft:getName():find(item) then
+                return true
+            end
+        end
+        return false
+    else
+        return getItem(itemid,getSwing("right") and "right" or "left")
     end
 end
 
@@ -69,7 +83,7 @@ end
 
 ---@param anims table
 ---@param hand string
----@param item string
+---@param item string | table
 ---@param mine string
 ---@param length boolean
 ---@param reset number
@@ -77,6 +91,7 @@ function batterUp:addChainedSwings(anims,hand,item,mine,length,reset)
     checkTable(anims)
     local chain = #anims
     local timer = 0
+    local item = type(item)=="table" and item or {item}
     function events.tick()
         if swinging then
             if getSwing(hand) and getItem(item,hand) and isMining(mine) then
@@ -102,13 +117,14 @@ end
 
 ---@param anims table
 ---@param hand string
----@param item string
+---@param item string | table
 ---@param mine string
 ---@param length boolean
 function batterUp:addRandomSwings(anims,hand,item,mine,length)
     checkTable(anims)
     local prev = rand(#anims)
     local result = #anims
+    local item = type(item)=="table" and item or {item}
     function events.tick()
         if swinging then
             if getSwing(hand) and getItem(item,hand) and isMining(mine) then
